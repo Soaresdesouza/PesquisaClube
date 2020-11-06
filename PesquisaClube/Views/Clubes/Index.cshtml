@@ -1,0 +1,88 @@
+﻿@model IEnumerable<PesquisaClube.Models.Clube>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div>
+    <div class="col-lg-6 well">
+        @await Component.InvokeAsync("Clubes")
+    </div>
+
+    <div class="col-lg-6">
+        <partial name="_Grafico" />
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+
+    function PegarClube(dados) {
+        var quantidade = 0;
+        var clubes = [];
+
+        while (quantidade < dados.length) {
+            clubes.push(dados[quantidade].ClubeNome);
+            quantidade++;
+        }
+
+        return clubes;
+    }
+
+    function PegarQtds(dados) {
+        var quantidade = 0;
+        var valores = [];
+
+        while (quantidade < dados.length) {
+            valores.push(dados[quantidade].Qtde);
+            quantidade++;
+        }
+
+        return valores;
+    }
+
+    function PegarCores(quantidade) {
+        var cores = [];
+
+        while (quantidade > 0) {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            cores.push("rgb(" + r + ", " + g + "," + b + ")");
+            quantidade--;
+        }
+        return cores;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "Clubes/DadosGrafico",
+        success: function (dados) {
+
+            new Chart(document.getElementById("grafico"), {
+                type: 'pie',
+                data: {
+                    labels: PegarClube(dados),
+                    datasets: [{
+                        labels: "Quantidade",
+                        borderWidth: 2,
+                        backgroundColor: PegarCores(dados.length),
+                        data: PegarQtds(dados)
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: "Quantidade em cada clube"
+                    }
+                }
+            });
+        }
+
+    })
+</script>

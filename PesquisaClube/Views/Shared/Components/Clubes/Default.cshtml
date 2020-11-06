@@ -1,0 +1,22 @@
+﻿@model IList<PesquisaClube.Models.Clube>
+
+@{
+    ViewData["Title"] = "Default";
+}
+
+<h2>Qual o melhor clube?</h2>
+
+<form asp-controller="Clubes" asp-action="EscolhaClubes" method="post" class="form-group">
+    @{
+        for (int i = 0; i < Model.Count(); i++)
+        {
+            <input asp-for="@Model[i].CheckboxMarcado" type="checkbox" />
+            <label asp-for="@Model[i].ClubeId">@Model[i].ClubeNome</label>
+            <input asp-for="@Model[i].ClubeId" type="hidden" />
+            <input asp-for="@Model[i].ClubeNome" type="hidden" />
+            <br />
+        }
+        <br />
+        <input type="submit" value="Salvar" class="btn btn-default" />
+    }
+</form>
